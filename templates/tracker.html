@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../assets/images/logo.png">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <title>Groupie-Tracker</title>
+    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.css">
+</head>
+
+<!--header-->
+<header class="header-area header-sticky" style="background-color: black;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="../home.html" class="logo">
+                            Groupie-Tracker
+                        </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+
+                    <ul class="nav">
+                        <li class="scroll-to-section"><a href="../home.html">Home</a></li>
+                        <li class="scroll-to-section"><a href="/pages/artist?artist={{.Random}}">Random</a></li>
+                        <button class="open-button" onclick="openForm()">Filter</button>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+
+
+                        <!-- ***** Menu End ***** -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!--end header-->
+<div class="form-popup" id="myForm">
+<section class="section" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="left-text-content">
+                    <div class="section-heading">
+                        <h2>Search for your favorite artists !</h2>
+                    </div>
+                    <h4 style="text-align: center;">Only for groupie nerds</h4>
+                    <form style="text-align: center;" action="/pages/tracker" id="testt" +id="album" +id="apparition" +id="location" +id="one" +id="two" +id="three" +id="four" method="get" method="post">
+                        <input type="submit" value="Search" name="recherche" id="testt">
+                </div>
+
+                <form action="/pages/artist" +id ="artistt" method="get" method="post">
+                    <input style="  margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
+                    <datalist id="listArtists">
+                        {{range $artist := .Artiste}}
+                        <option value="/pages/artist?artist={{$artist.Id}}">{{$artist.Name}}</option>
+                        {{end}}
+                    </datalist>
+                    <input style="  margin:auto; display:block;" type="submit" value="Search Artist" name="recherche" id="test">
+                </form>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="right-text-content">
+                    <div>
+                        <div>
+                            <div>
+                                <div class="slidecontainer">
+                                    <label>First apparition: <span id="demo"></span></label>
+                                    <input type="range" min="1945" max="2020" value="1940" class="slider" id="apparition" name="apparition">
+
+                                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button> 
+
+                                </div>
+
+                                <div class="slidecontainer">
+                                    <label>First album: <span id="demoo"></span></label>
+                                    <input type="range" min="1945" max="2020" value="1940" class="slider" id="album" name="album">
+                                </div>
+                                <script>
+                                    var slider = document.getElementById("apparition");
+                                    var output = document.getElementById("demo");
+                                    output.innerHTML = slider.value;
+
+                                    slider.oninput = function() {
+                                        output.innerHTML = this.value;
+                                    }
+
+                                    var sliderr = document.getElementById("album");
+                                    var outputt = document.getElementById("demoo");
+                                    outputt.innerHTML = sliderr.value;
+
+                                    sliderr.oninput = function() {
+                                        outputt.innerHTML = this.value;
+                                    }
+                                </script>
+
+                                <div>
+                                    <label for="whatever"> Number of Members: </label>
+                                    <label for="whatever"> 1</label>
+                                    <input type="radio" id="one" name="members" value="1">
+                                    <label for="whatever"> 2</label>
+                                    <input type="radio" id="two" name="members" value="2">
+                                    <label for="whatever"> 3</label>
+                                    <input type="radio" id="three" name="members" value="3">
+                                    <label for="whatever"> 4</label>
+                                    <input type="radio" name="members" id="four" value="4">
+                                </div>
+                                
+                                <input type="text" id="location" name="location" placeholder="Enter a location !">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</section>
+</div>
+<script>                                    function openForm() {
+    document.getElementById("myForm").style.display = "block";
+  }
+  
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  } </script>
+
+<br><br>
+<div class="row">
+    {{range $artist := .Artiste}}
+    <div class="column">
+        <div class="card">
+            <a href="/pages/artist?artist={{$artist.Id}}">
+                <div class="artist-contenu">
+                    <div class="image-artist">
+                        <img src="{{$artist.Image}}">
+                    </div>
+
+                    <h1>{{$artist.Name}}</h1>
+                    <h3>First Apparition:</h3>
+                    <p>{{$artist.CreationDate}}</p>
+                    <h3>Members:</h3>
+                    <p>{{$artist.Membersstr}}</p>
+                </div>
+            </a>
+        </div>
+        <br><br><br>
+    </div>
+
+    {{end}}
+</div>
+<!-- ***** Footer Start ***** -->
+<footer>
+    <div class="container" id="ourteam">
+        <div class="row">
+            <div class="col-lg-6 col-xs-12">
+                <div class="left-text-content">
+                    <p>Copyright © Groupie-Tracker 2021</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xs-12">
+                <div class="right-text-content">
+                    <ul class="social-icons">
+                        <li>
+                            <p>Follow Us !</p>
+                        </li>
+                        <h1>
+                            <p><img src="../assets/images/mail.jpg" alt="" width="25" height="25">luccharlopeau@gmail.com
+                                <a href="https://github.com/Luxchar"><img src="../assets/images/git.png" alt="" width="25" height="25"> Github Luc</a>
+                                <a href="https://www.linkedin.com/in/luc-charlopeau-6a15aa228/"><img src="../assets/images/linkedin.png" alt="" width="25" height="25"> Linked in Luc</a>
+                            </p>
+                        </h1>
+
+                        <h1>
+                            <p><img src="../assets/images/mail.jpg" alt="" width="25" height="25">Nagib.Lakhdari.pro@gmail.com
+                                <a href="https://github.com/Naywvi"><img src="../assets/images/git.png" alt="" width="25" height="25"> Github Nagib</a>
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiMh4rVpp31AhVBxhoKHdpJBZQQFnoECAMQAQ&url=https%3A%2F%2Ffr.linkedin.com%2Fin%2Fnagib-lakhdari-20234a15a&usg=AOvVaw3igOTyEHEXdA_hGt9kaiW1"><img src="../assets/images/linkedin.png" alt="" width="25" height="30"> Linked in Nagib</a>
+                            </p>
+                        </h1>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--end footers-->
+</body>
+
+</html>
