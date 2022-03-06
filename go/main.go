@@ -14,6 +14,12 @@ import (
 	"time"
 )
 
+//clean code
+
+//get rid of bootstrap
+//clean js
+//add js animation ?
+//change font
 //api spotify ??? afficher images albums ou + artistes ???
 
 type Templ struct { //Struct sent to api

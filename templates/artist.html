@@ -55,13 +55,15 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12">
                     <div class="right-text-content">
-                        <p>
                             <h3><art style=
                                 "margin:auto; display:block;
                                 text-align: center;
                                 color: rgb(54, 54, 54);
-                                ">{{$artist.Name}}</art> </h3> has {{$artist.Membersstr}} as members.</p>
-                        <p>
+                                ">{{$artist.Name}}</art> 
+                            </h3> 
+                            {{if not (eq (len $artist.Members) 1)}}  
+                            <p>This group has {{$artist.Membersstr}} as members.</p>
+                            {{end}}
                             <art style="color: rgb(54, 54, 54);">{{$artist.Name}}</art> was introduced to the public in {{$artist.CreationDate}} and their first album came out in {{$artist.FirstAlbum}}<br /></p>
                     </div>
                 </div>

@@ -61,11 +61,11 @@
                         <input type="submit" value="Search" name="recherche" id="testt">
                 </div>
 
-                <form action="/pages/artist" +id ="artistt" method="get" method="post">
-                    <input style="  margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
+                <form action="/pages/artist" method="get" method="post">
+                    <input style="margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
                     <datalist id="listArtists">
                         {{range $artist := .Artiste}}
-                        <option value="/pages/artist?artist={{$artist.Id}}">{{$artist.Name}}</option>
+                        <option value="{{$artist.Id}}">{{$artist.Name}}</option>
                         {{end}}
                     </datalist>
                     <input style="  margin:auto; display:block;" type="submit" value="Search Artist" name="recherche" id="test">
