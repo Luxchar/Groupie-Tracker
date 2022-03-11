@@ -1,0 +1,36 @@
+.cont_art {
+    padding-bottom: 60px;
+    width: auto;
+    height: 55em;
+    margin-left: 150px;
+    margin-right: 150px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 50px;
+    border-radius: 1em;
+    padding-bottom: 10em;
+}
+
+.art_cont {
+    text-align: center;
+    background-color: #d9ddff7a;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 1em;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mapi {
+    width: 36em;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 1em;
+}
