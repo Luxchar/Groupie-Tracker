@@ -14,7 +14,10 @@ import (
 	"time"
 )
 
-//Js dans un fichier
+//artist search only handful
+//map development ?
+//search filters
+
 type Templ struct { //Struct sent to api
 	Artiste []Artist
 	Random  int
@@ -38,6 +41,11 @@ type Artist struct { //Struct used to get each artist's info
 	JsString template.HTML
 }
 
+type Artistsearch struct { //Struct used to get each artist's info
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type LattitudeLongitude struct { //Struct used to get map data for each artist
 	Data []struct {
 		Latitude  float64 `json:"latitude"`
@@ -47,80 +55,78 @@ type LattitudeLongitude struct { //Struct used to get map data for each artist
 
 var templatesDir = os.Getenv("TEMPLATES_DIR")
 var artist Artist //creation instance struct artist
+var art Templ     //template to send to front
 
 func tracker(w http.ResponseWriter, r *http.Request) { //function that starts when tracker or artist page is loaded
 	var (
-		art         Templ
 		url         string //url for making requests
-		selectart   bool
-		param       = r.URL.Query()["artist"]
 		Randparam   = r.URL.Query()["RandomArtist"]
 		apparitionP = r.URL.Query()["apparition"]
 		albumP      = r.URL.Query()["album"]
 		membersP    = r.URL.Query()["members"]
 		locationsP  = r.URL.Query()["location"]
 	)
+	var emptyart Templ //reset struct to not have the same artist piling up
+	art = emptyart
+
 	rand.Seed(time.Now().UnixNano()) //random number to pick random artist
 	art.Random = 1 + rand.Intn(51-0)
 
-	var research bool
-	var iteration int
 	var generated []string //stock random integer for randomizer tracker page
-	if apparitionP != nil || albumP != nil || membersP != nil || locationsP != nil {
-		research = true
-		iteration = 53
-	} else {
-		iteration = 11
-	}
-
-	for i := 1; i < iteration; i++ {
-		url = "https://groupietrackers.herokuapp.com/api/artists/"
-		artist.Members = nil
-		//-------------------------- FETCH RESSOURCES API JSON
-		if param != nil { //user wants specific artist page
-			url += param[0]
-			selectart = true
-		} else if Randparam != nil { //user wants random artist page
-			url += Randparam[0]
-			selectart = true
-		} else { //user wants page tracker with every artist on it
+	url = "https://groupietrackers.herokuapp.com/api/artists/"
+	//-------------------------- FETCH RESSOURCES API JSON
+	if Randparam != nil { //user wants random artist page
+		url += Randparam[0]
+		fetchartist(url, apparitionP, albumP, membersP, locationsP, false)
+	} else { // user wants page tracker with every artist on it
+		for i := 1; i < 11; i++ {
 			rand.Seed(time.Now().UnixNano()) //random number to pick random artist
 			random := strconv.Itoa(1 + rand.Intn(51-0))
-			for stringInSlice(random, generated) {
+			for stringInSlice(random, generated) { //while number is not unique, picks another one
 				random = strconv.Itoa(1 + rand.Intn(51-0))
 			}
 			generated = append(generated, random)
 			url += random
-			selectart = false
+			fetchartist(url, apparitionP, albumP, membersP, locationsP, false)
+			url = "https://groupietrackers.herokuapp.com/api/artists/"
 		}
-		s, _, _ := json.Unmarshal([]byte(request(url)), &artist),
-			json.Unmarshal([]byte(request(artist.Locations)), &artist.Location),
-			json.Unmarshal([]byte(request(artist.Location.Dates)), &artist.Location.DatesLoc)
-		str := ""
-		for _, v := range artist.Members { //prints members without []
-			str += v + " "
-		}
-		artist.Membersstr = str
-		if s != nil {
-			fmt.Print("error when encoding the struct")
-		}
-		//-------------------------- append a la struct envoyée a l'api l'instance en cours
-		if research { //if user has chosen some criteria
-			if search(artist, apparitionP, albumP, membersP, locationsP) { //check whether artist in api is eligible to show
-				art.Artiste = append(art.Artiste, artist) //put it on the page
-			}
-		} else { //no criteria, just display everything
-			art.Artiste = append(art.Artiste, artist)
-		}
-
-		if selectart { //if artist is selected print the page of the artist and stop
-			JscriptStr()
-			(template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/artist.html")))).Execute(w, art)
-			return
-		}
-		url = ""
 	}
 	(template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/tracker.html")))).Execute(w, art)
+}
+
+func research(apparitionP, albumP, membersP, locationsP []string) bool { //does the user want to research
+	if apparitionP != nil || albumP != nil || membersP != nil || locationsP != nil {
+		return true
+	}
+	return false
+}
+
+func criteria(apparitionP, albumP, membersP, locationsP []string) {
+	if research(apparitionP, albumP, membersP, locationsP) { //if user has chosen some criteria
+		if search(artist, apparitionP, albumP, membersP, locationsP) { //check whether artist in api is eligible to show
+			art.Artiste = append(art.Artiste, artist) //put it on the page
+		}
+	} else { //no criteria, just display everything
+		art.Artiste = append(art.Artiste, artist)
+	}
+}
+
+func fetchartist(url string, apparitionP, albumP, membersP, locationsP []string, needmap bool) { //fetch an artist from the api
+	s, _, _ := json.Unmarshal([]byte(request(url)), &artist),
+		json.Unmarshal([]byte(request(artist.Locations)), &artist.Location),
+		json.Unmarshal([]byte(request(artist.Location.Dates)), &artist.Location.DatesLoc)
+	str := ""
+	for _, v := range artist.Members { //prints members without []
+		str += v + " "
+	}
+	artist.Membersstr = str
+	if s != nil {
+		fmt.Print("error when encoding the struct")
+	}
+	if needmap { //if user tries to print an artist page he needs the map
+		JscriptStr()
+	}
+	criteria(apparitionP, albumP, membersP, locationsP)
 }
 
 func search(artist Artist, apparitionP []string, albumP []string, membersP []string, locationsP []string) bool { //handles the comparisons with the users criteria to the artists
@@ -189,11 +195,23 @@ func JscriptStr() { //handles the map on the artist page
 	artist.JsString = template.HTML(k)
 }
 
+func artistt(w http.ResponseWriter, r *http.Request) { //user wants specific artist page
+	var emptyart Templ //reset struct to not have the same artist piling up
+	art = emptyart
+	param := r.URL.Query()["artist"]
+	url := "https://groupietrackers.herokuapp.com/api/artists/"
+	url += param[0]
+	var none []string
+	fetchartist(url, none, none, none, none, true)
+
+	(template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/artist.html")))).Execute(w, art)
+}
+
 func main() {
 	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
 	http.HandleFunc("/pages/tracker", tracker)
-	http.HandleFunc("/pages/artist", tracker)
+	http.HandleFunc("/pages/artist", artistt)
 	fmt.Printf("Started server successfully on http://localhost:8089/\n")
 	http.ListenAndServe(":8089", nil)
 }
