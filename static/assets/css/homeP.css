@@ -1,5 +1,5 @@
 body {
-    background-color: #d9ddff7a;
+    background-color: #ebebeb7a;
 }
 
 
@@ -59,7 +59,7 @@ body {
 }
 
 .left-text-content h3 {
-    margin-left: 70px;
+    margin-left: 350px;
 }
 
 .Contentmid {
@@ -90,6 +90,7 @@ body {
     display: flex;
     flex-direction: row-reverse;
     margin-right: 50px;
+    margin-top: -25px;
 }
 
 .social a {
@@ -149,8 +150,8 @@ nav a {
 }
 
 nav a:hover {
-    color: orange;
-    border-bottom: 2px solid gold;
+    color: rgb(36, 36, 36);
+    border-bottom: 2px solid rgb(0, 0, 0);
 }
 
 .conteneur {

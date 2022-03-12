@@ -11,8 +11,6 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/homeP.css">
     <link rel="stylesheet" type="text/css" href="../assets/css/trackerP.css">
     <!--script-->
-    <script src="../assets/js/tracker01.js"></script>
-    <script src="../assets/js/tracker02.js"></script>
 
 </head>
 <!--header-->
@@ -21,14 +19,14 @@
         <ul>
             <li><a href="/home.html">Groupie-Tracker</a></li>
             <li><a href="/home.html">Home</a></li>
-            <li><a href="#abou">Search</a></li>
-            <li><a href="/pages/artist?artist={{.Random}}">Artist random</a></li>
+            <li><a href="#search" onclick="Form()">Search</a></li>
+            <li><a href="/pages/artist?artist={{.Random}}">Random Artist</a></li>
         </ul>
     </nav>
 </hd>
 
 <!-- Search / filter -->
-<full id="abou" class="full">
+<full class="full">
 
     <div class="form-popup" id="myForm">
         <section>
@@ -38,47 +36,44 @@
 
             <h4 style="text-align: center;">Only for groupie nerds</h4>
             <form style="text-align: center;" action="/pages/tracker" id="testt" +id="album" +id="apparition" +id="location" +id="one" +id="two" +id="three" +id="four" method="get" method="post">
-                <input type="submit" value="Search" name="recherche" id="testt">
-    </div>
     <p class="separator2"></p>
-    <form action="/pages/artist" method="get" method="post">
-        <input style="margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
-        <datalist id="listArtists">
-            {{range $artist := .Artiste}}
-            <option value="{{$artist.Id}}">{{$artist.Name}}</option>
-            {{end}}
-        </datalist>
-        <input style="  margin:auto; display:block;" type="submit" value="Search Artist" name="recherche" id="test">
-    </form>
+        <form action="/pages/artist" method="get" method="post">
+            <input style="margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
+            <datalist id="listArtists">
+                {{range $artist := .Artiste}}
+                <option value="{{$artist.Id}}">{{$artist.Name}}</option>
+                {{end}}
+            </datalist>
+            <input style="  margin:auto; display:block;" type="submit" value="Search Artist" name="recherche" id="test">
+        </form>
     <p class="separator2"></p>
-    <div>
-        <div class="slidecontainer">
-            <h3>further information</h3>
-            <label>First apparition: <span id="demo"></span></label>
-            <input type="range" min="1945" max="2020" value="1940" class="slider" id="apparition" name="apparition">
-
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-
-        </div>
-
-        <div class="slidecontainer">
-            <label>First album: <span id="demoo"></span></label>
-            <input type="range" min="1945" max="2020" value="1940" class="slider" id="album" name="album">
-        </div>
-
         <div>
-            <label for="whatever"> Number of Members: </label>
-            <label for="whatever"> 1</label>
-            <input type="radio" id="one" name="members" value="1">
-            <label for="whatever"> 2</label>
-            <input type="radio" id="two" name="members" value="2">
-            <label for="whatever"> 3</label>
-            <input type="radio" id="three" name="members" value="3">
-            <label for="whatever"> 4</label>
-            <input type="radio" name="members" id="four" value="4">
-        </div>
+            <div class="slidecontainer">
+                <h3> Additional information</h3>
+                <label>First apparition: <span id="demo"></span></label>
+                <input type="range" min="1945" max="2020" value="1940" class="slider" id="apparition" name="apparition">
+            </div>
 
-        <input type="text" id="location" name="location" placeholder="Enter a location !">
+            <div class="slidecontainer">
+                <label>First album: <span id="demoo"></span></label>
+                <input type="range" min="1945" max="2020" value="1940" class="slider" id="album" name="album">
+            </div>
+
+            <div>
+                <label for="whatever"> Number of Members: </label>
+                <label for="whatever"> 1</label>
+                <input type="radio" id="one" name="members" value="1">
+                <label for="whatever"> 2</label>
+                <input type="radio" id="two" name="members" value="2">
+                <label for="whatever"> 3</label>
+                <input type="radio" id="three" name="members" value="3">
+                <label for="whatever"> 4</label>
+                <input type="radio" name="members" id="four" value="4">
+            </div>
+            <br>
+            <input type="text" id="location" name="location" placeholder="Enter a location !">
+            <input type="submit" value="Search" name="recherche" id="testt">
+        </div>
     </div>
     </section>
 
@@ -115,18 +110,19 @@
 <!-- Footer -->
 <div class="fontF">
     <div class="leftF">
-        <p>Copyright © Groupie-Tracker 2021</p>
+        <p>Groupie-Tracker 2021</p>
     </div>
     <div class="rightF">
         <ul class="Groupie">
             <li>
-                <p>A groupie? What's this ?</p><br>
+                <p>Hey what's a groupie ?</p><br>
             </li>
 
-            <p>Young unconditional admirer (often admirer) of a singer, a music group; by extension of a person.</p><br>
+            <p>Young unconditional admirer of a singer, a music group or by extension of a person.</p><br>
         </ul>
     </div>
 </div>
 </body>
-
+<script src="../assets/js/tracker01.js"></script>
+<script src="../assets/js/tracker02.js" defer></script>
 </html>
