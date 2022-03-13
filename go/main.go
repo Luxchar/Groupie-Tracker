@@ -15,7 +15,6 @@ import (
 )
 
 //map development ?
-//search filters
 
 type Templ struct { //Struct sent to api
 	Artiste      []Artist
@@ -147,26 +146,26 @@ func fetchartist(url string, apparitionP, albumP, membersP, locationsP []string,
 
 func search(artist Artist, apparitionP []string, albumP []string, membersP []string, locationsP []string) bool { //handles the comparisons with the users criteria to the artists
 	if apparitionP != nil {
-		if strconv.Itoa(artist.CreationDate) == apparitionP[0] && apparitionP[0] != "1945" {
-			return true
+		if strconv.Itoa(artist.CreationDate) != apparitionP[0] && apparitionP[0] != "1945" {
+			return false
 		}
 	}
 	if albumP != nil {
-		if artist.FirstAlbum == albumP[0] && albumP[0] != "1945" {
-			return true
+		if artist.FirstAlbum != albumP[0] && albumP[0] != "1945" {
+			return false
 		}
 	}
 	if membersP != nil {
-		if strconv.Itoa(len(artist.Members)) == membersP[0] && membersP[0] != "" {
-			return true
+		if strconv.Itoa(len(artist.Members)) != membersP[0] && membersP[0] != "" {
+			return false
 		}
 	}
 	if locationsP != nil {
-		if strings.Contains(artist.Location.Locations[0], locationsP[0]) {
-			return true
+		if !strings.Contains(artist.Location.Locations[0], locationsP[0]) {
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func request(url string) []byte { //simple get request to get the api data
