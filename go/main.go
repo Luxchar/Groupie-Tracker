@@ -14,8 +14,6 @@ import (
 	"time"
 )
 
-//map development ?
-
 type Templ struct { //Struct sent to api
 	Artiste      []Artist
 	Random       int
