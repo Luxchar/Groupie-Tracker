@@ -35,46 +35,46 @@
             </div>
 
             <h4 style="text-align: center;">Only for groupie nerds</h4>
-    <p class="separator2"></p>
-        <form id="artistform" style="text-align: center;" action="/pages/artist"+id="artistt" method="get" method="post">
-            <input style="margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
-            <datalist id="listArtists">
-                {{range $artist := .Artiste}}
+            <p class="separator2"></p>
+            <form id="artistform" style="text-align: center;" action="/pages/artist" +id="artistt" method="get" method="post">
+                <input style="margin:auto; display:block;" list="listArtists" type="text" placeholder="Search for an artist !" onchange="location = this.value;" id="artistt" name="artist">
+                <datalist id="listArtists">
+                {{range $artist := .Artistsearch}}
                 <option value="{{$artist.Id}}">{{$artist.Name}}</option>
                 {{end}}
             </datalist>
-        </form>
-    <p class="separator2"></p>
-        <div>
-            <div class="slidecontainer">
-                <h3> Additional information</h3>
-                <label>First apparition: <span id="demo"></span></label>
+            </form>
+            <p class="separator2"></p>
+            <div>
+                <div class="slidecontainer">
+                    <h3> Additional information</h3>
+                    <label>First apparition: <span id="demo"></span></label>
                     <form style="text-align: center;" action="/pages/tracker" id="testt" +id="album" +id="apparition" +id="location" +id="one" +id="two" +id="three" +id="four" method="get" method="post">
 
-                <input type="range" min="1945" max="2020" value="1940" class="slider" id="apparition" name="apparition">
-            </div>
+                        <input type="range" min="1945" max="2020" value="1940" class="slider" id="apparition" name="apparition">
+                </div>
 
-            <div class="slidecontainer">
-                <label>First album: <span id="demoo"></span></label>
-                <input type="range" min="1945" max="2020" value="1940" class="slider" id="album" name="album">
-            </div>
+                <div class="slidecontainer">
+                    <label>First album: <span id="demoo"></span></label>
+                    <input type="range" min="1945" max="2020" value="1940" class="slider" id="album" name="album">
+                </div>
 
-            <div>
-                <label for="whatever"> Number of Members: </label>
-                <label for="whatever"> 1</label>
-                <input type="radio" id="one" name="members" value="1">
-                <label for="whatever"> 2</label>
-                <input type="radio" id="two" name="members" value="2">
-                <label for="whatever"> 3</label>
-                <input type="radio" id="three" name="members" value="3">
-                <label for="whatever"> 4</label>
-                <input type="radio" name="members" id="four" value="4">
-            </div>
-            <br>
-            <input type="text" id="location" name="location" placeholder="Enter a location !">
-            <input type="submit" value="Search" name="recherche" id="testt">
+                <div>
+                    <label for="whatever"> Number of Members: </label>
+                    <label for="whatever"> 1</label>
+                    <input type="radio" id="one" name="members" value="1">
+                    <label for="whatever"> 2</label>
+                    <input type="radio" id="two" name="members" value="2">
+                    <label for="whatever"> 3</label>
+                    <input type="radio" id="three" name="members" value="3">
+                    <label for="whatever"> 4</label>
+                    <input type="radio" name="members" id="four" value="4">
+                </div>
+                <br>
+                <input type="text" id="location" name="location" placeholder="Enter a location !">
+                <input type="submit" value="Search" name="recherche" id="testt">
                 </form>
-        </div>
+            </div>
     </div>
     </section>
 
@@ -126,4 +126,5 @@
 </body>
 <script src="../assets/js/tracker01.js"></script>
 <script src="../assets/js/tracker02.js" defer></script>
+
 </html>

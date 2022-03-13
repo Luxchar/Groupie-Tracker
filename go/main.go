@@ -14,13 +14,13 @@ import (
 	"time"
 )
 
-//artist search only handful
 //map development ?
 //search filters
 
 type Templ struct { //Struct sent to api
-	Artiste []Artist
-	Random  int
+	Artiste      []Artist
+	Random       int
+	Artistsearch []ArtistSearch
 }
 type Artist struct { //Struct used to get each artist's info
 	Id           int      `json:"id"`
@@ -41,9 +41,14 @@ type Artist struct { //Struct used to get each artist's info
 	JsString template.HTML
 }
 
-type Artistsearch struct { //Struct used to get each artist's info
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+type ArtistSearch struct { //Struct used to get each artist's info
+	Id           int      `json:"id"`
+	Image        string   `json:"image"`
+	Name         string   `json:"name"`
+	Members      []string `json:"members"`
+	Membersstr   string
+	CreationDate int    `json:"creationDate"`
+	FirstAlbum   string `json:"firstAlbum"`
 }
 
 type LattitudeLongitude struct { //Struct used to get map data for each artist
@@ -90,6 +95,17 @@ func tracker(w http.ResponseWriter, r *http.Request) { //function that starts wh
 			fetchartist(url, apparitionP, albumP, membersP, locationsP, false)
 			url = "https://groupietrackers.herokuapp.com/api/artists/"
 		}
+		var artistsearch ArtistSearch
+		for i := 1; i < 53; i++ { //for searchbar research
+			rand.Seed(time.Now().UnixNano()) //random number to pick random artist
+			url += strconv.Itoa(i)
+			err := json.Unmarshal([]byte(request(url)), &artistsearch)
+			if err != nil {
+				fmt.Print("error when encoding the struct")
+			}
+			url = "https://groupietrackers.herokuapp.com/api/artists/"
+			art.Artistsearch = append(art.Artistsearch, artistsearch)
+		}
 	}
 	(template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/tracker.html")))).Execute(w, art)
 }
@@ -112,7 +128,7 @@ func criteria(apparitionP, albumP, membersP, locationsP []string) {
 }
 
 func fetchartist(url string, apparitionP, albumP, membersP, locationsP []string, needmap bool) { //fetch an artist from the api
-	s, _, _ := json.Unmarshal([]byte(request(url)), &artist),
+	err, _, _ := json.Unmarshal([]byte(request(url)), &artist),
 		json.Unmarshal([]byte(request(artist.Locations)), &artist.Location),
 		json.Unmarshal([]byte(request(artist.Location.Dates)), &artist.Location.DatesLoc)
 	str := ""
@@ -120,7 +136,7 @@ func fetchartist(url string, apparitionP, albumP, membersP, locationsP []string,
 		str += v + " "
 	}
 	artist.Membersstr = str
-	if s != nil {
+	if err != nil {
 		fmt.Print("error when encoding the struct")
 	}
 	if needmap { //if user tries to print an artist page he needs the map
