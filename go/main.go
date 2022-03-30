@@ -14,47 +14,6 @@ import (
 	"time"
 )
 
-type Templ struct { //Struct sent to api
-	Artiste      []Artist
-	Random       int
-	Artistsearch []ArtistSearch
-}
-type Artist struct { //Struct used to get each artist's info
-	Id           int      `json:"id"`
-	Image        string   `json:"image"`
-	Name         string   `json:"name"`
-	Members      []string `json:"members"`
-	Membersstr   string
-	CreationDate int      `json:"creationDate"`
-	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"` //1
-	Location     struct { //1
-		Locations []string `json:"locations"`
-		Dates     string   `json:"dates"` //2
-		DatesLoc  struct { //2
-			Dates []string `json:"dates"`
-		}
-	}
-	JsString template.HTML
-}
-
-type ArtistSearch struct { //Struct used to get each artist's info
-	Id           int      `json:"id"`
-	Image        string   `json:"image"`
-	Name         string   `json:"name"`
-	Members      []string `json:"members"`
-	Membersstr   string
-	CreationDate int    `json:"creationDate"`
-	FirstAlbum   string `json:"firstAlbum"`
-}
-
-type LattitudeLongitude struct { //Struct used to get map data for each artist
-	Data []struct {
-		Latitude  float64 `json:"latitude"`
-		Longitude float64 `json:"longitude"`
-	} `json:"data"`
-}
-
 var templatesDir = os.Getenv("TEMPLATES_DIR")
 var artist Artist //creation instance struct artist
 var art Templ     //template to send to front
@@ -137,7 +96,7 @@ func fetchartist(url string, apparitionP, albumP, membersP, locationsP []string,
 		fmt.Print("error when encoding the struct")
 	}
 	if needmap { //if user tries to print an artist page he needs the map
-		JscriptStr()
+		go JscriptStr()
 	}
 	criteria(apparitionP, albumP, membersP, locationsP)
 }
@@ -179,33 +138,6 @@ func stringInSlice(a string, list []string) bool {
 		}
 	}
 	return false
-}
-
-func JscriptStr() { //handles the map on the artist page
-	var loc LattitudeLongitude
-	var slice []string
-	str := ""
-	for limite, i := range artist.Location.Locations { //Retire cas particuliers
-		for _, j := range i {
-			if j == '_' {
-				j = ' '
-			}
-			str += string(j)
-		}
-		json.Unmarshal([]byte(request("http://api.positionstack.com/v1/forward?access_key=9a6d5681ba2b143da463543ee17cf96e&query="+str+"&limit=1")), &loc)
-		if len(artist.Location.Locations)-1 == limite { //créations jsstring
-			slice = append(slice, "['"+str+"',"+fmt.Sprintf("%f", loc.Data[0].Latitude)+", "+fmt.Sprintf("%f", loc.Data[0].Longitude)+","+fmt.Sprintf("%q", artist.Location.DatesLoc.Dates[limite][1:])+"],")
-		} else {
-			slice = append(slice, `['`+str+"',"+fmt.Sprintf("%f", loc.Data[0].Latitude)+", "+fmt.Sprintf("%f", loc.Data[0].Longitude)+","+fmt.Sprintf("%q", artist.Location.DatesLoc.Dates[limite][1:])+"],")
-		}
-		str = ""
-	}
-	s, _ := ioutil.ReadFile("../static/assets/js/mapjs.txt")
-	script := string(s)
-	k := `<script>
-	var LocationsForMap = [
-		` + strings.Join(slice, "\n") + script
-	artist.JsString = template.HTML(k)
 }
 
 func artistt(w http.ResponseWriter, r *http.Request) { //user wants specific artist page
